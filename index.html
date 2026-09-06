@@ -1,185 +1,63 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="STREAMFLIX - Watch movies and series powered by the OMDb API in a modern streaming experience." />
-  <meta name="theme-color" content="#141414" />
-  <title>STREAMFLIX - Stream Movies & Series</title>
-  <link rel="stylesheet" href="./css/style.css" />
-  <link rel="stylesheet" href="./css/animations.css" />
-  <link rel="stylesheet" href="./css/responsive.css" />
+  <meta http-equiv="refresh" content="0; url=frontend/index.html" />
+  <title>STREAMFLIX - Streaming Web Platform</title>
+  <link rel="icon" type="image/svg+xml" href="frontend/assets/images/favicon.svg" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #141414;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #E50914;
+      margin-bottom: 1.5rem;
+    }
+    .logo span {
+      color: #fff;
+    }
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 3px solid rgba(229, 9, 20, 0.2);
+      border-top-color: #E50914;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1rem;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    a {
+      color: #E50914;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    window.location.replace("frontend/index.html");
+  </script>
 </head>
 <body>
-
-  <!-- Navigation Bar -->
-  <header class="navbar">
-    <div class="nav-left">
-      <a href="index.html" class="brand-logo">
-        <svg class="logo-icon" viewBox="0 0 24 24">
-          <path d="M4 2v20l16-10L4 2z"/>
-        </svg>
-        STREAM<span>FLIX</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="movies.html">Movies</a></li>
-        <li><a href="series.html">Series</a></li>
-        <li><a href="movies.html?category=popular">New & Popular</a></li>
-        <li><a href="my-list.html">My List</a></li>
-        <li><a href="history.html">History</a></li>
-      </ul>
-    </div>
-
-    <div class="nav-right">
-      <a href="search.html" class="nav-action-btn" title="Search titles (/ key)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      </a>
-
-      <button class="nav-kids-badge" title="Toggle Kids Profile">KIDS</button>
-
-      <div class="nav-profile-wrapper">
-        <div class="profile-avatar-btn">
-          <div class="profile-avatar-img"></div>
-          <span style="font-size: 0.75rem;">▼</span>
-        </div>
-        <div class="profile-dropdown">
-          <div class="profile-dropdown-header">
-            <div class="profile-dropdown-name">Member</div>
-            <div class="profile-dropdown-tag">Demo Profile</div>
-          </div>
-          <a href="profiles.html" class="profile-dropdown-item">Manage Profiles</a>
-          <a href="settings.html" class="profile-dropdown-item">Account Settings</a>
-          <a href="history.html" class="profile-dropdown-item">Watch History</a>
-          <div class="profile-dropdown-divider"></div>
-          <button class="profile-dropdown-item" onclick="AuthService.logout()">Sign Out of StreamFlix</button>
-        </div>
-      </div>
-
-      <div class="mobile-menu-btn" aria-label="Toggle menu">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero" id="heroSection">
-    <div class="hero-overlay"></div>
-    <div class="container">
-      <div class="hero-content fade-in">
-        <div class="hero-badge-row">
-          <span class="badge-pill featured">FEATURED STREAM</span>
-          <div id="heroMeta" class="hero-meta" style="margin-bottom: 0;"></div>
-        </div>
-        <h1 class="hero-title" id="heroTitle">Loading Feature...</h1>
-        <p class="hero-plot" id="heroPlot">Connecting to StreamFlix server to load metadata...</p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" id="heroPlayBtn">
-            <span>▶ Play</span>
-          </button>
-          <button class="btn btn-secondary" id="heroListBtn">
-            <span>+ My List</span>
-          </button>
-          <button class="btn btn-secondary" id="heroInfoBtn">
-            <span>ⓘ More Info</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content Rows -->
-  <main class="main-content">
-    <div id="rowsContainer">
-      <!-- Dynamically filled by home.js -->
-    </div>
-  </main>
-
-  <!-- Quick Info Modal -->
-  <div class="modal-backdrop" id="quickModal" onclick="if(event.target === this) App.closeQuickModal()">
-    <div class="modal-content">
-      <button class="modal-close-btn" onclick="App.closeQuickModal()" aria-label="Close modal">✕</button>
-      <div class="modal-hero">
-        <div class="modal-hero-overlay">
-          <h2 class="modal-title" style="font-size: 2rem; color: #fff; margin-bottom: 0.5rem;"></h2>
-          <div class="modal-meta" style="display: flex; gap: 0.75rem; color: #ccc; margin-bottom: 1rem;"></div>
-          <div style="display: flex; gap: 1rem;">
-            <button class="btn btn-primary modal-play-btn">▶ Play</button>
-            <button class="btn btn-secondary modal-list-btn">+ My List</button>
-          </div>
-        </div>
-      </div>
-      <div class="modal-body">
-        <p class="modal-plot" style="font-size: 1.05rem; line-height: 1.6; color: #ddd;"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-brand">
-          <div class="brand-logo" style="font-size: 1.3rem;">
-            STREAM<span>FLIX</span>
-          </div>
-          <p style="max-width: 320px; line-height: 1.6;">
-            A premier streaming interface engineered with Java Spring Boot and Vanilla Web standards.
-          </p>
-        </div>
-        <div>
-          <h4 style="color: #fff; margin-bottom: 0.8rem;">Browse</h4>
-          <ul class="footer-links">
-            <li><a href="movies.html">Movies Catalog</a></li>
-            <li><a href="series.html">TV Series</a></li>
-            <li><a href="search.html">Search Catalog</a></li>
-            <li><a href="my-list.html">Watchlist</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="color: #fff; margin-bottom: 0.8rem;">Account</h4>
-          <ul class="footer-links">
-            <li><a href="profiles.html">Profiles</a></li>
-            <li><a href="settings.html">Preferences</a></li>
-            <li><a href="history.html">Playback History</a></li>
-            <li><a href="login.html">Demo Login</a></li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="color: #fff; margin-bottom: 0.8rem;">Platform</h4>
-          <ul class="footer-links">
-            <li><a href="/api/health" target="_blank">API Health Status</a></li>
-            <li><a href="https://www.omdbapi.com/" target="_blank" rel="noopener">OMDb API</a></li>
-            <li><a href="settings.html">Clear Cache</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-disclaimer">
-        StreamFlix is a demonstration streaming web application. Movie and series metadata is retrieved in real-time through the OMDb API. StreamFlix does not host or scrape unauthorized copyrighted film streams.
-      </div>
-    </div>
-  </footer>
-
-  <!-- Scripts -->
-  <script src="./js/config.js"></script>
-  <script src="./js/storage.js"></script>
-  <script src="./js/cache.js"></script>
-  <script src="./js/utils.js"></script>
-  <script src="./js/discovery.js"></script>
-  <script src="./js/videoSources.js"></script>
-  <script src="./js/api.js"></script>
-  <script src="./js/auth.js"></script>
-  <script src="./js/profiles.js"></script>
-  <script src="./js/watchlist.js"></script>
-  <script src="./js/history.js"></script>
-  <script src="./js/recommendations.js"></script>
-  <script src="./js/app.js"></script>
-  <script src="./js/home.js"></script>
+  <div class="logo">STREAM<span>FLIX</span></div>
+  <div class="spinner"></div>
+  <p>Launching STREAMFLIX... <br><br>If you are not redirected automatically, <a href="frontend/index.html">click here</a>.</p>
 </body>
 </html>
