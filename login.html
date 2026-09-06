@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In - STREAMFLIX</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/animations.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+  <style>
+    .auth-backdrop {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.9) 100%),
+                  radial-gradient(circle at center, #2b0b0e 0%, #0d0d0d 100%);
+      padding: 1.5rem;
+    }
+    .auth-nav {
+      padding: 1rem 2rem;
+    }
+    .auth-card-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 0;
+    }
+    .auth-card {
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 3rem 3.5rem;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: var(--shadow-lg);
+    }
+    .auth-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 1.8rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+    }
+    .form-input {
+      width: 100%;
+      background: #252525;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color var(--transition-fast);
+      font-family: inherit;
+    }
+    .form-input:focus {
+      border-color: var(--accent-red);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+    .auth-disclaimer-box {
+      margin-top: 2rem;
+      padding: 0.85rem;
+      border-radius: var(--radius-sm);
+      background: rgba(229, 9, 20, 0.1);
+      border: 1px solid rgba(229, 9, 20, 0.3);
+      font-size: 0.78rem;
+      color: #ffa4a4;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-backdrop">
+    <div class="auth-nav">
+      <a href="index.html" class="brand-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24"><path d="M4 2v20l16-10L4 2z"/></svg>
+        STREAM<span>FLIX</span>
+      </a>
+    </div>
+
+    <div class="auth-card-wrapper">
+      <div class="auth-card slide-up">
+        <h1 class="auth-title">Sign In</h1>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="demo@streamflix.com" required value="demo@streamflix.com" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required value="password123" />
+          </div>
+
+          <button type="submit" class="btn btn-accent" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">
+            Sign In to StreamFlix
+          </button>
+
+          <button type="button" class="btn btn-secondary" onclick="demoGuestLogin()" style="width: 100%; margin-top: 0.75rem; padding: 0.85rem;">
+            1-Click Guest Access
+          </button>
+        </form>
+
+        <div class="auth-disclaimer-box">
+          <strong>Security Notice:</strong> This frontend authentication is for demonstration purposes and is not secure production authentication. Real user passwords should never be stored in browser storage.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/config.js"></script>
+  <script src="./js/storage.js"></script>
+  <script src="./js/cache.js"></script>
+  <script src="./js/utils.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/profiles.js"></script>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPassword').value;
+
+      try {
+        AuthService.login(email, pass);
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    function demoGuestLogin() {
+      AuthService.login('guest@streamflix.com', 'guest123');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

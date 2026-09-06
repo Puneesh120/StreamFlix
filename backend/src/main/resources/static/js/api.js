@@ -50,6 +50,17 @@ const Api = {
 
         // Handle HTTP Errors
         if (!response.ok) {
+          // Attempt static/direct fallback if 404 (e.g. GitHub Pages without Java backend)
+          try {
+            const fallbackData = await this.fallbackRequest(endpoint);
+            if (fallbackData) {
+              if (!options.method || options.method === 'GET') {
+                CacheManager.set(cacheKey, fallbackData);
+              }
+              return fallbackData;
+            }
+          } catch (_) {}
+
           let errorMessage = 'Unable to load data. Please try again.';
           try {
             const errJson = await response.json();
@@ -83,6 +94,18 @@ const Api = {
         return data;
       } catch (err) {
         clearTimeout(timeoutId);
+
+        // Attempt static/direct fallback if network fetch failed
+        try {
+          const fallbackData = await this.fallbackRequest(endpoint);
+          if (fallbackData) {
+            if (!options.method || options.method === 'GET') {
+              CacheManager.set(cacheKey, fallbackData);
+            }
+            return fallbackData;
+          }
+        } catch (_) {}
+
         if (err.name === 'AbortError') {
           throw new Error('Request timed out while connecting to StreamFlix server.');
         }
@@ -155,6 +178,62 @@ const Api = {
     const qTitle = encodeURIComponent(title || '');
     const qYear = encodeURIComponent(year || '');
     return this.request(`/trailers/${imdbId}?title=${qTitle}&year=${qYear}`);
+  },
+
+  /**
+   * Seamless client-side fallback for GitHub Pages, Vercel, or static web hosting
+   */
+  async fallbackRequest(endpoint) {
+    const omdbKey = 'trilogy';
+
+    // 1. Movie details: /movies/tt... or /series/tt...
+    const movieMatch = endpoint.match(/^\/(?:movies|series)\/(tt\d+)$/);
+    if (movieMatch) {
+      const res = await fetch(`https://www.omdbapi.com/?apikey=${omdbKey}&i=${movieMatch[1]}&plot=full`);
+      const data = await res.json();
+      if (data && data.Response !== 'False') return data;
+    }
+
+    // 2. Search: /movies/search?query=... or /series/search?query=...
+    const searchMatch = endpoint.match(/^\/(?:movies|series)\/search\?(.*)$/);
+    if (searchMatch) {
+      const params = new URLSearchParams(searchMatch[1]);
+      const q = params.get('query') || '';
+      const p = params.get('page') || '1';
+      const type = endpoint.includes('series') ? 'series' : 'movie';
+      const res = await fetch(`https://www.omdbapi.com/?apikey=${omdbKey}&s=${encodeURIComponent(q)}&page=${p}&type=${type}`);
+      const data = await res.json();
+      return data;
+    }
+
+    // 3. Category discovery: /discover/{category}
+    const discoverMatch = endpoint.match(/^\/discover\/([a-zA-Z0-9_-]+)$/);
+    if (discoverMatch) {
+      const catKey = discoverMatch[1];
+      const seeds = (window.DISCOVERY_CATEGORIES && window.DISCOVERY_CATEGORIES[catKey])
+        || ["Inception", "Interstellar", "The Dark Knight", "Avatar", "Gladiator", "Dune"];
+      const movies = [];
+      const fetchList = seeds.slice(0, 8);
+      await Promise.all(fetchList.map(async (title) => {
+        try {
+          const r = await fetch(`https://www.omdbapi.com/?apikey=${omdbKey}&t=${encodeURIComponent(title)}`);
+          const d = await r.json();
+          if (d && d.Response !== 'False') {
+            movies.push(d);
+          }
+        } catch (_) {}
+      }));
+      if (movies.length > 0) return movies;
+    }
+
+    // 4. Trailer embed: /trailers/{imdbId}
+    const trailerMatch = endpoint.match(/^\/trailers\/(tt\d+)/);
+    if (trailerMatch && window.VideoSourceManager) {
+      const embed = window.VideoSourceManager.getTrailerEmbedUrl(trailerMatch[1]);
+      return { imdbId: trailerMatch[1], embedUrl: embed };
+    }
+
+    throw new Error('Static fallback unavailable');
   }
 };
 

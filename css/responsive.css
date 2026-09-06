@@ -1,0 +1,228 @@
+/* ==========================================================================
+   STREAMFLIX - Responsive Breakpoints & Adaptive Layouts
+   Supports: 320px, 375px, 390px, 414px, 480px, 768px, 1024px, 1280px, 1440px, 1920px+
+   ========================================================================== */
+
+/* 2K / 4K / Ultra-wide (> 1600px) */
+@media (min-width: 1601px) {
+  :root {
+    --container-max: 1800px;
+  }
+  .movie-card {
+    flex: 0 0 240px;
+  }
+  .hero-title {
+    font-size: 4.5rem;
+  }
+  .hero-content {
+    max-width: 800px;
+  }
+}
+
+/* Large Desktop (1281px - 1600px) */
+@media (max-width: 1600px) {
+  .movie-card {
+    flex: 0 0 210px;
+  }
+}
+
+/* Standard Desktop / Laptop (1025px - 1280px) */
+@media (max-width: 1280px) {
+  .navbar {
+    padding: 0 2rem;
+  }
+  .container {
+    padding: 0 2rem;
+  }
+  .row-header,
+  .row-slider-wrapper {
+    padding: 0 2rem;
+  }
+  .movie-card {
+    flex: 0 0 190px;
+  }
+  .hero-content {
+    max-width: 580px;
+  }
+  .footer-content {
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Tablet Landscape & Small Laptop (769px - 1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --header-height: 60px;
+  }
+  .navbar {
+    padding: 0 1.5rem;
+  }
+  .nav-left {
+    gap: 1.5rem;
+  }
+  .nav-links {
+    gap: 1rem;
+  }
+  .nav-links a {
+    font-size: 0.85rem;
+  }
+  .movie-card {
+    flex: 0 0 170px;
+  }
+  .hero {
+    min-height: 70vh;
+  }
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .hero-plot {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 2;
+  }
+  .row-header,
+  .row-slider-wrapper {
+    padding: 0 1.5rem;
+  }
+  .footer-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Tablet Portrait & Large Mobile (481px - 768px) */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 56px;
+  }
+  .navbar {
+    padding: 0 1.25rem;
+  }
+  .mobile-menu-btn {
+    display: flex;
+  }
+  .nav-links {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--header-height));
+    background-color: rgba(18, 18, 18, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+    z-index: 999;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .nav-links.open {
+    transform: translateX(0);
+  }
+  .nav-links a {
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: 100%;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .brand-logo {
+    font-size: 1.35rem;
+  }
+  .hero {
+    min-height: 60vh;
+    padding: 2rem 0;
+  }
+  .hero-content {
+    padding: 1.5rem 0;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-plot {
+    font-size: 0.9rem;
+    -webkit-line-clamp: 2;
+  }
+  .btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+  }
+  .row-header,
+  .row-slider-wrapper {
+    padding: 0 1.25rem;
+  }
+  .row-title {
+    font-size: 1.15rem;
+  }
+  .movie-card {
+    flex: 0 0 145px;
+  }
+  .card-overlay {
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0.9) 100%);
+  }
+  .slider-arrow {
+    display: none; /* Swipe on touch devices */
+  }
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+/* Mobile Standard (376px - 480px) */
+@media (max-width: 480px) {
+  .movie-card {
+    flex: 0 0 130px;
+  }
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  .hero-meta {
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+  .hero-actions {
+    gap: 0.6rem;
+  }
+  .row-header,
+  .row-slider-wrapper {
+    padding: 0 1rem;
+  }
+  .card-title {
+    font-size: 0.82rem;
+  }
+  .card-info-row {
+    font-size: 0.72rem;
+  }
+  .modal-content {
+    margin: 0;
+    max-height: 96vh;
+    border-radius: var(--radius-md);
+  }
+  .modal-hero {
+    height: 220px;
+  }
+  .modal-body {
+    padding: 1.25rem;
+  }
+}
+
+/* Small Mobile (320px - 375px) */
+@media (max-width: 375px) {
+  .brand-logo {
+    font-size: 1.15rem;
+  }
+  .movie-card {
+    flex: 0 0 120px;
+  }
+  .btn {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  .hero-title {
+    font-size: 1.5rem;
+  }
+}
