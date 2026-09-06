@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign In - STREAMFLIX</title>
+  <title>Sign In & Sign Up - STREAMFLIX</title>
+  <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/animations.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
@@ -12,12 +13,15 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.9) 100%),
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.95) 100%),
                   radial-gradient(circle at center, #2b0b0e 0%, #0d0d0d 100%);
       padding: 1.5rem;
     }
     .auth-nav {
       padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
     .auth-card-wrapper {
       flex: 1;
@@ -27,98 +31,377 @@
       padding: 2rem 0;
     }
     .auth-card {
-      background: rgba(18, 18, 18, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
+      background: rgba(18, 18, 18, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--radius-md);
-      padding: 3rem 3.5rem;
+      padding: 2.5rem 3rem;
       width: 100%;
-      max-width: 460px;
-      box-shadow: var(--shadow-lg);
+      max-width: 480px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8), 0 0 20px rgba(229, 9, 20, 0.15);
+      position: relative;
     }
-    .auth-title {
-      font-size: 2rem;
-      font-weight: 800;
+
+    /* Tabs Header */
+    .auth-tabs {
+      display: flex;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+      padding: 0.3rem;
+      margin-bottom: 2rem;
+      gap: 0.3rem;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-align: center;
+    }
+    .auth-tab-btn.active {
+      background: var(--accent-red);
       color: #fff;
-      margin-bottom: 1.8rem;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
     }
+
     .form-group {
       margin-bottom: 1.25rem;
+      position: relative;
     }
     .form-label {
       display: block;
       font-size: 0.85rem;
       color: var(--text-secondary);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.45rem;
       font-weight: 600;
+    }
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
     }
     .form-input {
       width: 100%;
-      background: #252525;
+      background: #222;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: var(--radius-sm);
-      padding: 0.85rem 1rem;
+      padding: 0.85rem 2.8rem 0.85rem 1rem;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
-      transition: border-color var(--transition-fast);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
       font-family: inherit;
     }
     .form-input:focus {
       border-color: var(--accent-red);
-      box-shadow: 0 0 10px var(--accent-glow);
+      box-shadow: 0 0 10px rgba(229, 9, 20, 0.3);
+      background: #282828;
     }
-    .auth-disclaimer-box {
-      margin-top: 2rem;
-      padding: 0.85rem;
+    .password-toggle-btn {
+      position: absolute;
+      right: 0.75rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color var(--transition-fast);
+    }
+    .password-toggle-btn:hover {
+      color: #fff;
+    }
+
+    /* Password Strength Indicator */
+    .strength-meter-container {
+      margin-top: 0.6rem;
+    }
+    .strength-bars {
+      display: flex;
+      gap: 0.3rem;
+      height: 4px;
+      margin-bottom: 0.4rem;
+    }
+    .strength-bar {
+      flex: 1;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      transition: background var(--transition-fast);
+    }
+    .strength-text-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .strength-checklist {
+      margin-top: 0.6rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem 0.6rem;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color var(--transition-fast);
+    }
+    .check-item.valid {
+      color: #4caf50;
+    }
+
+    /* Alert Banner */
+    .auth-alert {
+      display: none;
+      padding: 0.85rem 1rem;
       border-radius: var(--radius-sm);
-      background: rgba(229, 9, 20, 0.1);
-      border: 1px solid rgba(229, 9, 20, 0.3);
+      margin-bottom: 1.25rem;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .auth-alert.error {
+      display: flex;
+      background: rgba(229, 9, 20, 0.15);
+      border: 1px solid rgba(229, 9, 20, 0.5);
+      color: #ff9999;
+      animation: shake 0.4s ease;
+    }
+    .auth-alert.success {
+      display: flex;
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px solid rgba(76, 175, 80, 0.5);
+      color: #a5d6a7;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    .form-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .remember-label input[type="checkbox"] {
+      accent-color: var(--accent-red);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    /* Security Badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       font-size: 0.78rem;
-      color: #ffa4a4;
-      line-height: 1.5;
+      color: #888;
+    }
+    .security-badge svg {
+      width: 14px;
+      height: 14px;
+      fill: #4caf50;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 0.95rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      border: none;
+      background: var(--accent-red);
+      color: #fff;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .btn-submit:hover {
+      background: var(--accent-red-hover);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
   </style>
 </head>
 <body>
 
   <div class="auth-backdrop">
-    <div class="auth-nav">
+    <!-- Navbar -->
+    <header class="auth-nav">
       <a href="index.html" class="brand-logo">
         <svg class="logo-icon" viewBox="0 0 24 24"><path d="M4 2v20l16-10L4 2z"/></svg>
         STREAM<span>FLIX</span>
       </a>
-    </div>
+      <a href="index.html" style="color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+        &larr; Back to Browse
+      </a>
+    </header>
 
-    <div class="auth-card-wrapper">
-      <div class="auth-card slide-up">
-        <h1 class="auth-title">Sign In</h1>
+    <!-- Center Card -->
+    <main class="auth-card-wrapper">
+      <div class="auth-card">
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <!-- Tabs -->
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabSignInBtn" onclick="switchTab('signin')">Sign In</button>
+          <button class="auth-tab-btn" id="tabSignUpBtn" onclick="switchTab('signup')">Sign Up</button>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div class="auth-alert" id="authAlert">
+          <span id="authAlertIcon">⚠️</span>
+          <span id="authAlertMsg">Notification message</span>
+        </div>
+
+        <!-- ================= Sign In Form ================= -->
+        <form id="signInForm" onsubmit="handleSignIn(event)">
           <div class="form-group">
-            <label class="form-label" for="loginEmail">Email Address</label>
-            <input type="email" id="loginEmail" class="form-input" placeholder="demo@streamflix.com" required value="demo@streamflix.com" />
+            <label class="form-label" for="signInEmail">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="signInEmail" class="form-input" placeholder="name@example.com" required autocomplete="email" />
+            </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required value="password123" />
+            <label class="form-label" for="signInPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="signInPassword" class="form-input" placeholder="Enter your password" required autocomplete="current-password" />
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signInPassword', this)" title="Show/Hide Password">
+                👁️
+              </button>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn-accent" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">
+          <div class="form-options">
+            <label class="remember-label">
+              <input type="checkbox" id="signInRemember" checked />
+              <span>Remember me</span>
+            </label>
+            <a href="#" onclick="forgotPasswordDemo(event)" style="color: var(--text-muted); text-decoration: none;">Need help?</a>
+          </div>
+
+          <button type="submit" class="btn-submit" id="signInSubmitBtn">
             Sign In to StreamFlix
           </button>
 
-          <button type="button" class="btn btn-secondary" onclick="demoGuestLogin()" style="width: 100%; margin-top: 0.75rem; padding: 0.85rem;">
-            1-Click Guest Access
+          <button type="button" class="btn btn-secondary" onclick="quickGuestAccess()" style="width: 100%; margin-top: 0.85rem; padding: 0.85rem;">
+            ⚡ 1-Click Guest Demo Access
           </button>
         </form>
 
-        <div class="auth-disclaimer-box">
-          <strong>Security Notice:</strong> This frontend authentication is for demonstration purposes and is not secure production authentication. Real user passwords should never be stored in browser storage.
+        <!-- ================= Sign Up Form ================= -->
+        <form id="signUpForm" onsubmit="handleSignUp(event)" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="signUpName">Full Name</label>
+            <div class="input-wrapper">
+              <input type="text" id="signUpName" class="form-input" placeholder="e.g. Alex Mercer" required autocomplete="name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signUpEmail">Email Address</label>
+            <div class="input-wrapper">
+              <input type="email" id="signUpEmail" class="form-input" placeholder="name@example.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signUpPassword">Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="signUpPassword" class="form-input" placeholder="Create strong password" required autocomplete="new-password" oninput="onPasswordInput(this.value)" />
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signUpPassword', this)" title="Show/Hide Password">
+                👁️
+              </button>
+            </div>
+
+            <!-- Real-time Strength Meter -->
+            <div class="strength-meter-container">
+              <div class="strength-bars">
+                <div class="strength-bar" id="strBar1"></div>
+                <div class="strength-bar" id="strBar2"></div>
+                <div class="strength-bar" id="strBar3"></div>
+                <div class="strength-bar" id="strBar4"></div>
+              </div>
+              <div class="strength-text-row">
+                <span>Strength:</span>
+                <span id="strengthText" style="font-weight: 700;">Enter password</span>
+              </div>
+              <div class="strength-checklist">
+                <div class="check-item" id="ruleLength"><span>•</span> 8+ characters</div>
+                <div class="check-item" id="ruleLetters"><span>•</span> Mixed letters</div>
+                <div class="check-item" id="ruleNumbers"><span>•</span> At least 1 number</div>
+                <div class="check-item" id="ruleSymbols"><span>•</span> Special symbol</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signUpConfirm">Confirm Password</label>
+            <div class="input-wrapper">
+              <input type="password" id="signUpConfirm" class="form-input" placeholder="Repeat password" required autocomplete="new-password" />
+              <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('signUpConfirm', this)" title="Show/Hide Password">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-label" style="font-size: 0.8rem; line-height: 1.4;">
+              <input type="checkbox" id="signUpTerms" required />
+              <span>I agree to the StreamFlix Terms of Service & Privacy Policy</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-submit" id="signUpSubmitBtn">
+            Create Protected Account
+          </button>
+        </form>
+
+        <!-- Security Badge -->
+        <div class="security-badge">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          Protected by Salted PBKDF2 Password Hashing & Rate Limiting
         </div>
+
       </div>
-    </div>
+    </main>
   </div>
 
   <script src="./js/config.js"></script>
@@ -129,22 +412,164 @@
   <script src="./js/profiles.js"></script>
 
   <script>
-    function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      const pass = document.getElementById('loginPassword').value;
+    let currentTab = 'signin';
 
-      try {
-        AuthService.login(email, pass);
-        window.location.href = 'index.html';
-      } catch (err) {
-        alert(err.message);
+    function switchTab(tab) {
+      currentTab = tab;
+      clearAlert();
+
+      const tabSignIn = document.getElementById('tabSignInBtn');
+      const tabSignUp = document.getElementById('tabSignUpBtn');
+      const signInForm = document.getElementById('signInForm');
+      const signUpForm = document.getElementById('signUpForm');
+
+      if (tab === 'signin') {
+        tabSignIn.classList.add('active');
+        tabSignUp.classList.remove('active');
+        signInForm.style.display = 'block';
+        signUpForm.style.display = 'none';
+      } else {
+        tabSignUp.classList.add('active');
+        tabSignIn.classList.remove('active');
+        signInForm.style.display = 'none';
+        signUpForm.style.display = 'block';
       }
     }
 
-    function demoGuestLogin() {
-      AuthService.login('guest@streamflix.com', 'guest123');
-      window.location.href = 'index.html';
+    function showAlert(msg, type = 'error') {
+      const box = document.getElementById('authAlert');
+      const text = document.getElementById('authAlertMsg');
+      const icon = document.getElementById('authAlertIcon');
+
+      box.className = `auth-alert ${type}`;
+      text.textContent = msg;
+      icon.textContent = type === 'error' ? '⚠️' : '✅';
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function clearAlert() {
+      const box = document.getElementById('authAlert');
+      box.className = 'auth-alert';
+      box.style.display = 'none';
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
+      }
+    }
+
+    function onPasswordInput(val) {
+      const strength = AuthService.checkPasswordStrength(val);
+
+      const bars = [
+        document.getElementById('strBar1'),
+        document.getElementById('strBar2'),
+        document.getElementById('strBar3'),
+        document.getElementById('strBar4')
+      ];
+      const strText = document.getElementById('strengthText');
+
+      bars.forEach((bar, idx) => {
+        if (idx < strength.score) {
+          bar.style.background = strength.color;
+        } else {
+          bar.style.background = 'rgba(255, 255, 255, 0.1)';
+        }
+      });
+
+      strText.textContent = val ? strength.label : 'Enter password';
+      strText.style.color = val ? strength.color : 'inherit';
+
+      // Update checklist
+      document.getElementById('ruleLength').classList.toggle('valid', strength.rules.hasLength);
+      document.getElementById('ruleLetters').classList.toggle('valid', strength.rules.hasLetter);
+      document.getElementById('ruleNumbers').classList.toggle('valid', strength.rules.hasNumber);
+      document.getElementById('ruleSymbols').classList.toggle('valid', strength.rules.hasSymbol);
+    }
+
+    async function handleSignIn(e) {
+      e.preventDefault();
+      clearAlert();
+
+      const email = document.getElementById('signInEmail').value.trim();
+      const pass = document.getElementById('signInPassword').value;
+      const remember = document.getElementById('signInRemember').checked;
+      const btn = document.getElementById('signInSubmitBtn');
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      try {
+        await AuthService.login(email, pass, remember);
+        showAlert('Sign in successful! Redirecting...', 'success');
+        setTimeout(() => {
+          const redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+          window.location.href = redirect;
+        }, 600);
+      } catch (err) {
+        showAlert(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Sign In to StreamFlix';
+      }
+    }
+
+    async function handleSignUp(e) {
+      e.preventDefault();
+      clearAlert();
+
+      const name = document.getElementById('signUpName').value.trim();
+      const email = document.getElementById('signUpEmail').value.trim();
+      const pass = document.getElementById('signUpPassword').value;
+      const confirm = document.getElementById('signUpConfirm').value;
+      const btn = document.getElementById('signUpSubmitBtn');
+
+      if (pass !== confirm) {
+        showAlert('Passwords do not match. Please re-enter.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      try {
+        await AuthService.register(name, email, pass);
+        showAlert('Account created successfully! Welcome to StreamFlix.', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 800);
+      } catch (err) {
+        showAlert(err.message, 'error');
+        btn.disabled = false;
+        btn.textContent = 'Create Protected Account';
+      }
+    }
+
+    async function quickGuestAccess() {
+      clearAlert();
+      const btn = document.getElementById('signInSubmitBtn');
+      btn.disabled = true;
+
+      try {
+        await AuthService.login('demo@streamflix.com', 'Password123!', true);
+        showAlert('Logged in as Demo User. Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 600);
+      } catch (err) {
+        showAlert(err.message, 'error');
+        btn.disabled = false;
+      }
+    }
+
+    function forgotPasswordDemo(e) {
+      e.preventDefault();
+      alert('Password Reset:\n\nFor demo accounts, use:\nEmail: demo@streamflix.com\nPassword: Password123!\n\nOr click "1-Click Guest Demo Access" for instant login.');
     }
   </script>
 </body>
