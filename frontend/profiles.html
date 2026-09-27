@@ -7,6 +7,26 @@
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/animations.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('streamflix_user');
+        if (!raw) {
+          var target = encodeURIComponent((window.location.pathname.split('/').pop() || 'profiles.html') + window.location.search);
+          window.location.replace('login.html?redirect=' + target);
+          return;
+        }
+        var sess = JSON.parse(raw);
+        if (!sess || (sess.expiresAt && Date.now() > sess.expiresAt) || (!sess.user && !sess.email)) {
+          localStorage.removeItem('streamflix_user');
+          var target = encodeURIComponent((window.location.pathname.split('/').pop() || 'profiles.html') + window.location.search);
+          window.location.replace('login.html?redirect=' + target);
+        }
+      } catch (e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
   <style>
     .profiles-screen {
       min-height: 100vh;

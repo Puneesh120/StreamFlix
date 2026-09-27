@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="0; url=frontend/index.html" />
+  <meta http-equiv="refresh" content="0; url=frontend/login.html" />
   <title>STREAMFLIX - Streaming Web Platform</title>
   <link rel="icon" type="image/svg+xml" href="frontend/assets/images/favicon.svg" />
   <style>
@@ -52,12 +52,24 @@
     }
   </style>
   <script>
-    window.location.replace("frontend/index.html");
+    (function() {
+      try {
+        var raw = localStorage.getItem('streamflix_user');
+        if (raw) {
+          var sess = JSON.parse(raw);
+          if (sess && (!sess.expiresAt || Date.now() < sess.expiresAt) && (sess.user || sess.email)) {
+            window.location.replace("frontend/index.html");
+            return;
+          }
+        }
+      } catch (e) {}
+      window.location.replace("frontend/login.html");
+    })();
   </script>
 </head>
 <body>
   <div class="logo">STREAM<span>FLIX</span></div>
   <div class="spinner"></div>
-  <p>Launching STREAMFLIX... <br><br>If you are not redirected automatically, <a href="frontend/index.html">click here</a>.</p>
+  <p>Launching STREAMFLIX... <br><br>If you are not redirected automatically, <a href="frontend/login.html">click here to sign in</a>.</p>
 </body>
 </html>

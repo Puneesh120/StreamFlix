@@ -8,6 +8,26 @@
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/animations.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('logout') === 'true') {
+          localStorage.removeItem('streamflix_user');
+          localStorage.removeItem('streamflix_profile');
+          return;
+        }
+        var raw = localStorage.getItem('streamflix_user');
+        if (raw) {
+          var sess = JSON.parse(raw);
+          if (sess && (!sess.expiresAt || Date.now() < sess.expiresAt) && (sess.user || sess.email)) {
+            var redirect = params.get('redirect') || 'index.html';
+            window.location.replace(redirect);
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   <style>
     .auth-backdrop {
       min-height: 100vh;
@@ -541,7 +561,8 @@
         await AuthService.register(name, email, pass);
         showAlert('Account created successfully! Welcome to StreamFlix.', 'success');
         setTimeout(() => {
-          window.location.href = 'index.html';
+          const redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+          window.location.href = redirect;
         }, 800);
       } catch (err) {
         showAlert(err.message, 'error');
@@ -559,7 +580,8 @@
         await AuthService.login('demo@streamflix.com', 'Password123!', true);
         showAlert('Logged in as Demo User. Redirecting...', 'success');
         setTimeout(() => {
-          window.location.href = 'index.html';
+          const redirect = new URLSearchParams(window.location.search).get('redirect') || 'index.html';
+          window.location.href = redirect;
         }, 600);
       } catch (err) {
         showAlert(err.message, 'error');
@@ -571,6 +593,13 @@
       e.preventDefault();
       alert('Password Reset:\n\nFor demo accounts, use:\nEmail: demo@streamflix.com\nPassword: Password123!\n\nOr click "1-Click Guest Demo Access" for instant login.');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('logout') === 'true') {
+        showAlert('You have been signed out successfully.', 'success');
+      }
+    });
   </script>
 </body>
 </html>

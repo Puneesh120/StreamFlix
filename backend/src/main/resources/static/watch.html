@@ -8,6 +8,26 @@
   <link rel="stylesheet" href="./css/animations.css" />
   <link rel="stylesheet" href="./css/player.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('streamflix_user');
+        if (!raw) {
+          var target = encodeURIComponent((window.location.pathname.split('/').pop() || 'watch.html') + window.location.search);
+          window.location.replace('login.html?redirect=' + target);
+          return;
+        }
+        var sess = JSON.parse(raw);
+        if (!sess || (sess.expiresAt && Date.now() > sess.expiresAt) || (!sess.user && !sess.email)) {
+          localStorage.removeItem('streamflix_user');
+          var target = encodeURIComponent((window.location.pathname.split('/').pop() || 'watch.html') + window.location.search);
+          window.location.replace('login.html?redirect=' + target);
+        }
+      } catch (e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
   <style>
     .trailer-iframe-container {
       position: absolute;
@@ -133,6 +153,7 @@
   <script src="./js/storage.js"></script>
   <script src="./js/cache.js"></script>
   <script src="./js/utils.js"></script>
+  <script src="./js/auth.js"></script>
   <script src="./js/videoSources.js"></script>
   <script src="./js/api.js"></script>
   <script src="./js/history.js"></script>

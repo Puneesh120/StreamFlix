@@ -40,6 +40,10 @@ class StreamflixPlayer {
   }
 
   async init() {
+    if (window.AuthService && typeof AuthService.requireAuth === 'function') {
+      AuthService.requireAuth();
+    }
+
     if (!this.imdbId) {
       this.showUnavailable("No video specified. Please return to browse and select a title.");
       return;

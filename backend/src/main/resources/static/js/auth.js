@@ -19,7 +19,7 @@ const AuthService = {
       if (session) this.logout(false);
       return null;
     }
-    return session.user;
+    return session.user || (session.email ? session : null);
   },
 
   /**
@@ -48,8 +48,9 @@ const AuthService = {
    * Check if session has expired (24h default)
    */
   isSessionExpired(session) {
-    if (!session || !session.expiresAt) return true;
-    return Date.now() > session.expiresAt;
+    if (!session) return true;
+    if (session.expiresAt && Date.now() > session.expiresAt) return true;
+    return false;
   },
 
   /**
@@ -205,7 +206,7 @@ const AuthService = {
     StorageManager.removeItem(StorageManager.KEYS.PROFILE);
 
     if (redirect) {
-      window.location.href = 'login.html';
+      window.location.replace('login.html?logout=true');
     }
   },
 
@@ -215,7 +216,9 @@ const AuthService = {
   requireAuth() {
     if (!this.isAuthenticated()) {
       const current = window.location.pathname.split('/').pop() || 'index.html';
-      window.location.href = `login.html?redirect=${encodeURIComponent(current)}`;
+      const search = window.location.search || '';
+      const redirectTarget = encodeURIComponent(current + search);
+      window.location.replace(`login.html?redirect=${redirectTarget}`);
     }
   },
 

@@ -5,6 +5,14 @@
 
 const App = {
   init() {
+    // 1. Enforce authentication gate on protected pages
+    const page = window.location.pathname.split('/').pop() || 'index.html';
+    if (page !== 'login.html' && page !== '404.html') {
+      if (window.AuthService && typeof AuthService.requireAuth === 'function') {
+        AuthService.requireAuth();
+      }
+    }
+
     this.initNavbarScroll();
     this.initMobileMenu();
     this.initProfileDropdown();
