@@ -52,19 +52,7 @@
     }
   </style>
   <script>
-    (function() {
-      try {
-        var raw = localStorage.getItem('streamflix_user');
-        if (raw) {
-          var sess = JSON.parse(raw);
-          if (sess && (!sess.expiresAt || Date.now() < sess.expiresAt) && (sess.user || sess.email)) {
-            window.location.replace("frontend/index.html");
-            return;
-          }
-        }
-      } catch (e) {}
-      window.location.replace("frontend/login.html");
-    })();
+    window.location.replace("frontend/login.html");
   </script>
 </head>
 <body>

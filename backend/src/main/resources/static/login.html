@@ -15,15 +15,6 @@
         if (params.get('logout') === 'true') {
           localStorage.removeItem('streamflix_user');
           localStorage.removeItem('streamflix_profile');
-          return;
-        }
-        var raw = localStorage.getItem('streamflix_user');
-        if (raw) {
-          var sess = JSON.parse(raw);
-          if (sess && (!sess.expiresAt || Date.now() < sess.expiresAt) && (sess.user || sess.email)) {
-            var redirect = params.get('redirect') || 'index.html';
-            window.location.replace(redirect);
-          }
         }
       } catch (e) {}
     })();

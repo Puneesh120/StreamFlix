@@ -6,6 +6,17 @@ StreamFlix delivers an authentic streaming platform experience—complete with d
 
 ---
 
+## 🌐 Live Application & Demo Links
+
+| Resource | Direct Link | Description |
+|---|---|---|
+| 🚀 **Live Web Platform** | **[Launch STREAMFLIX](https://puneesh120.github.io/StreamFlix/)** | Main deployment entrypoint (displays Login first) |
+| 🔐 **Sign In & Sign Up Portal** | **[Open Login Page](https://puneesh120.github.io/StreamFlix/frontend/login.html)** | Secure authentication portal with salted PBKDF2 hashing & rate limiting |
+| ⚡ **1-Click Instant Guest Access** | Available on Login page | Click **"1-Click Guest Demo Access"** for instant 1-second sign in |
+| 👤 **Default Demo Credentials** | `demo@streamflix.com` / `Password123!` | Pre-configured test account |
+
+---
+
 ## 🌟 Key Features
 
 - **Cinematic Dark UI/UX**: OLED-black styling (`#141414`), Netflix-red accents (`#E50914`), glassmorphism headers, fluid hover scaling, and skeleton shimmer loaders.
